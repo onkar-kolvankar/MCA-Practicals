@@ -1,3 +1,13 @@
+/*
+    SJFS - Shortest Job First (NON PREEMPTIVE ALGO) 
+    METHOD 1 - My way -
+        - You need to sort input acc. to the Arrival time and Burst time also.
+        - Pid     Arr_time      Bur_time      
+            3          1             2                  
+            1          1             3                   
+            2          2             4                  
+            4          4             4                
+*/
 #include<stdio.h>
 void swap(int a , int b)
 {

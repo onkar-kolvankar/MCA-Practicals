@@ -1,3 +1,6 @@
+// FCFS (Non - Preemptive Algo) - This algorithm works on principle i.e First process to come in system will be 
+// executed first completely .
+// Method 1- Sort Arrival time here (by Bubble sort) here and execute process in the sorted process acc. to their arrival time
 #include<stdio.h>
 int main()
 {
@@ -53,10 +56,24 @@ int main()
 
     // Now cal completion time , turn around time and waiting time
     
-    // Completion time = Sum of all prev Burst time + Current Burst time
+    /*
+        NOTE - ERROR - LOGICAL ERROR
+        -Completion time = Sum of all prev Burst time + Current Burst time
+        -You took this as completion time but it only works when their is a process which comes at Arrival time at 0
+        -If there is no process which comes at 0 then this formula won't work
+        -CORRECT FORMULA => 0 + Arrival Time of 1st executable process + (Sum of all prev Burst Times)
+
+        - ERROR OP -
+        Pid     Arr_time      Bur_time      Comp_time       Turnaround_time     Waiting_time
+        1          3             4              4                 1                  -3     
+        3          4             5              9                 5                  0      
+        2          7             3              12                 5                  2   
+    
+    */ 
     // Turn around time = Completion time - arrival time -> how much time process is in the system
     // Waiting time = Turnaround time - burst time
-    int bt_sum = 0;
+    // int bt_sum = 0 ;
+    int bt_sum = 0 + arrival_time[0];
     for(int i = 0 ; i < total_process ; i++)
     {
         // burst time
