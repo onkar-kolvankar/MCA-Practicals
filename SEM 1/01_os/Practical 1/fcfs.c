@@ -70,12 +70,21 @@ int main()
         waiting_time[i] = turnaround_time[i] - burst_time[i];
     }
 
-     // print all process info
+    // print all process info
     printf("Pid     Arr_time      Bur_time      Comp_time       Turnaround_time     Waiting_time\n");
-
     for(int i = 0 ; i < total_process ; i++)
     {
         printf("%d          %d             %d              %d                 %d                  %d\n",process_id[i],arrival_time[i],burst_time[i],completion_time[i],turnaround_time[i],waiting_time[i]);
     }
+
+    // print average waiting time and average turn around time
+    float avg_wt = 0 ,avg_tat = 0;
+    for(int i = 0 ; i < total_process ; i++)
+    {
+        avg_wt += waiting_time[i];
+        avg_tat += turnaround_time[i];
+    }
+    printf("Average Waiting Time = %f\nAverage Turnaround Time = %f",avg_wt/total_process,avg_tat/total_process);
+    
     return 0;
 }
