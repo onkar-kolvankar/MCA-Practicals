@@ -4,7 +4,7 @@
 
 struct Process
 {
-    int p_id ,p_at,p_bt,p_rem_bt,p_ct,p_tat,p_wt;
+    int p_id ,p_at,p_bt,p_rem_bt,p_ct,p_tat,p_wt , p_response_time;
 
 };
 
@@ -22,6 +22,9 @@ struct Process input(int pr_id)
     // set burt time = rem burst time
     p.p_rem_bt = p.p_bt;
 
+    // set response time as -ve and if it is -ve then you set its value when process arrive 
+    p.p_response_time = -99;
+
 
     return p;
 
@@ -37,12 +40,12 @@ void swapProcess(struct Process *p1 , struct Process *p2)
 
 void display(struct Process p[],int process_count)
 {
-    printf("\nID | Arr_time | Burst_time | Rem Burst_time| Comp_time | Turn_time | Waiting_time\n");
+    printf("\nID | Arr_time | Burst_time | Rem Burst_time| Comp_time | Turn_time | Waiting_time | Response time\n");
 
 
     for(int i = 0 ; i < process_count ; i++)
     {
-        printf("\n%d       %d           %d           %d            %d              %d              %d\n",p[i].p_id,p[i].p_at,p[i].p_bt,p[i].p_rem_bt,p[i].p_ct,p[i].p_tat,p[i].p_wt);
+        printf("\n%d       %d           %d           %d            %d              %d              %d               %d\n",p[i].p_id,p[i].p_at,p[i].p_bt,p[i].p_rem_bt,p[i].p_ct,p[i].p_tat,p[i].p_wt ,p[i].p_response_time );
     }
     
 }
@@ -89,7 +92,7 @@ void sortAccRemBtAt(struct Process p[],int ready_process_count)
 int getArivedProcess(struct Process p[] , int current_time,int total_process)
 {
     int count = 0 ; 
-    for(int m = 0 ; m < total_process/*p[m].p_at <= current_time */; m++)
+    for(int m = 0 ; m < total_process; m++)
     {
         if( p[m].p_at <= current_time )
             count++;
@@ -151,21 +154,21 @@ int main()
 
     // sort acc to arrival time and then burst time to get 1st process to execute.
     sortAccAtBt(process,no_of_process);
-    display(process,no_of_process);
+    //////display(process,no_of_process);
 
 
 
     for(current_time = 0  ; 1 ; current_time++)
     {
-        printf("\n-----current time = %d",current_time);
+        //////printf("\n-----current time = %d",current_time);
         arrived_process = getArivedProcess(process,current_time,no_of_process);
-        printf("\n--Arrived Process = %d",arrived_process);
+        //////printf("\n--Arrived Process = %d",arrived_process);
 
         if(arrived_process)         // if there are process which can be executed
         {
             sortAccRemBtAt(process,arrived_process);
-            printf("Displaying arr sorted acc to rem burst time");
-            display(process,no_of_process);
+            //////printf("Displaying arr sorted acc to rem burst time");
+            //////display(process,no_of_process);
 
             
             for(int i = 0 ; i < arrived_process ; i++)
@@ -174,7 +177,14 @@ int main()
                 {
                     process[i].p_rem_bt--;
 
-                    // if remaininig burst time  = 0 now then current tie will be process's completion time.
+                    // check if it is first time the process is coming and if yes then assign response time
+                    // RESPONSE TIME = CPU 1st Time - ARRIVAL TIME
+                    if(process[i].p_response_time < 0)
+                    {
+                        process[i].p_response_time = current_time - process[i].p_at;
+                    }
+
+                    // if remaininig burst time  = 0 now then current time will be process's completion time.
                     if(process[i].p_rem_bt == 0)
                     {
                         process[i].p_ct = current_time + 1;
@@ -203,6 +213,7 @@ int main()
 
     }
 
+    // display table with values calculated
     display(process,no_of_process);
 
     // cal avg waiting time and avg turn around time
