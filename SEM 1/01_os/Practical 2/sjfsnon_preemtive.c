@@ -59,7 +59,7 @@ void display(struct Process p[],int process_count)
 
     for(int i = 0 ; i < process_count ; i++)
     {
-        printf("\n%d     %d      %d      %d      %d          %d\n",p[i].p_id,p[i].p_at,p[i].p_bt,p[i].p_ct,p[i].p_tat,p[i].p_wt);
+        printf("\n%d       %d           %d            %d              %d              %d\n",p[i].p_id,p[i].p_at,p[i].p_bt,p[i].p_ct,p[i].p_tat,p[i].p_wt);
     }
     
 }
@@ -96,10 +96,31 @@ int getArivedProcess(struct Process p[] , int current_process,int current_time)
     return count;
 }
 
+float getAvgTAT(struct Process p[],int process_count)
+{
+    float sum_tat =0;
+    for(int i = 0  ; i < process_count ;i++)
+    {
+        sum_tat += p[i].p_tat;
+    }
+    return sum_tat/process_count;
+
+}
+
+float getAvgWT(struct Process p[],int process_count)
+{
+    float sum_wt =0;
+    for(int i = 0  ; i < process_count ;i++)
+    {
+        sum_wt += p[i].p_wt;
+    }
+    return sum_wt/process_count;
+
+}
 
 int main()
 {
-    int no_of_process , current_time = 0 ,arrived_process;
+    int no_of_process , current_time = 0 ,arrived_process,sum_wt=0,sum_tat=0;
     printf("Enter no of process :");
     scanf("%d",&no_of_process);
 
@@ -110,11 +131,13 @@ int main()
     {
         process[i] = input(i+1);
     }
+    printf("\nEntered data -\n");
+    display(process,no_of_process);
 
     // sort acc to arrival time and then burst time to get 1st process to execute.
     sortAccAtBt(process,no_of_process);
 
-    display(process,no_of_process);
+    //display(process,no_of_process);
 
     // set current time to the start time of process which will be executed first
     current_time += process[0].p_at;
@@ -172,7 +195,11 @@ int main()
     }
 
     // Now display final order of execution and complete data.
+    printf("\nOrder of Execution and Calculated Data-\n");
     display(process,no_of_process);
+
+    // cal avg waiting time and avg turn around time
+    printf("Average TAT  = %f  | Average WT = %f",getAvgTAT(process,no_of_process),getAvgWT(process,no_of_process));
 
     return 0;
 }
