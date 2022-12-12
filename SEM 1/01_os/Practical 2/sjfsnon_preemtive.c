@@ -7,16 +7,15 @@ struct Process
 
 };
 
-struct Process input()
+struct Process input(int pr_id)
 {
     struct Process p;
-    printf("\nEnter Process ID :");
-    scanf("%d",&p.p_id);
+    p.p_id  = pr_id;
 
-    printf("Enter Process Arrival Time :");
+    printf("Enter Process %d Arrival Time :",p.p_id);
     scanf("%d",&p.p_at);
 
-    printf("Enter Process Burst Time :");
+    printf("Enter Process %d Burst Time :",p.p_id);
     scanf("%d",&p.p_bt);
 
     return p;
@@ -33,7 +32,6 @@ void swapProcess(struct Process *p1 , struct Process *p2)
 
 void sortAccAtBt(struct Process p[],int process_count)
 {
-    struct Process temp;
     int isSwapped  = 1;
 
     while (isSwapped)
@@ -56,25 +54,24 @@ void sortAccAtBt(struct Process p[],int process_count)
 
 void display(struct Process p[],int process_count)
 {
-    printf("ID Arr_time Burst_time Comp_time Turn_time Waiting_time\n");
+    printf("ID | Arr_time | Burst_time | Comp_time | Turn_time | Waiting_time\n");
 
 
     for(int i = 0 ; i < process_count ; i++)
     {
-        printf("\n%d    %d    %d    %d    %d     %d\n",p[i].p_id,p[i].p_at,p[i].p_bt,p[i].p_ct,p[i].p_tat,p[i].p_wt);
+        printf("\n%d     %d      %d      %d      %d          %d\n",p[i].p_id,p[i].p_at,p[i].p_bt,p[i].p_ct,p[i].p_tat,p[i].p_wt);
     }
     
 }
 
-void sortAccBt(struct Process p[],int start_index ,int process_count)
+void sortAccBt(struct Process p[],int start_index ,int ready_process_count)
 {
-    struct Process temp;
     int isSwapped = 1;
 
     while(isSwapped)
     {
         isSwapped = 0;
-        for(int i = start_index ; i <= start_index + process_count -1 ; i++)
+        for(int i = start_index ; i < start_index + ready_process_count -1 ; i++)
         {
             if(p[i].p_bt > p[i+1].p_bt)
             {
@@ -88,9 +85,21 @@ void sortAccBt(struct Process p[],int start_index ,int process_count)
 
 }
 
+int getArivedProcess(struct Process p[] , int current_process,int current_time)
+{
+    int count = 0 ; 
+    for(int m = current_process ; p[m].p_at <= current_time ; m++)
+    {
+        count++;
+    }
+
+    return count;
+}
+
+
 int main()
 {
-    int no_of_process , current_time = 0;
+    int no_of_process , current_time = 0 ,arrived_process;
     printf("Enter no of process :");
     scanf("%d",&no_of_process);
 
@@ -99,11 +108,13 @@ int main()
     // take input of p_id, process arrival time , process burst time
     for(int i = 0 ; i < no_of_process ; i++)
     {
-        process[i] = input();
+        process[i] = input(i+1);
     }
 
     // sort acc to arrival time and then burst time to get 1st process to execute.
     sortAccAtBt(process,no_of_process);
+
+    display(process,no_of_process);
 
     // set current time to the start time of process which will be executed first
     current_time += process[0].p_at;
@@ -116,24 +127,36 @@ int main()
     for(int i = 1 ; i < no_of_process ; i++)
     {
         // find how many process have arrived at current time 
+        arrived_process = getArivedProcess(process,i,current_time);
+        printf("\n--Arrived process from i = %d are %d",i,arrived_process);
+
+        // if(arrived_process)
+        // {
+
+        // } 
+        // else
+        // {
+
+        // }
 
         // sort data acc to burst time till 
+        printf("\n-----i = %d\n",i);
+        sortAccBt(process,i,arrived_process);
+        printf("\n");
+        display(process,no_of_process);
 
+        // set new current time
+        current_time += process[i].p_bt;
 
         // data for current process
-        process[i].p_ct = current_time + process[i].p_bt;
+        process[i].p_ct = current_time /*+ process[i].p_bt;*/;
         process[i].p_tat = process[i].p_ct - process[i].p_at;
         process[i].p_wt = process[i].p_tat - process[i].p_bt;
 
-        
-
-        
     }
 
     // 
     display(process,no_of_process);
-
-
 
     return 0;
 }
