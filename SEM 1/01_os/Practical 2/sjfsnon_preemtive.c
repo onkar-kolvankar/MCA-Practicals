@@ -128,34 +128,50 @@ int main()
     {
         // find how many process have arrived at current time 
         arrived_process = getArivedProcess(process,i,current_time);
-        printf("\n--Arrived process from i = %d are %d",i,arrived_process);
+        ////printf("\n--Arrived process from i = %d are %d",i,arrived_process);
 
-        // if(arrived_process)
-        // {
+        if(arrived_process)
+        {
+            // sort data acc to burst time till 
+            ////printf("\n-----i = %d\n",i);
+            sortAccBt(process,i,arrived_process);
+            ////printf("\n");
+            ////display(process,no_of_process);
 
-        // } 
-        // else
-        // {
+            // set new current time
+            current_time += process[i].p_bt;
 
-        // }
+            // data for current process
+            process[i].p_ct = current_time /*+ process[i].p_bt;*/;
+            process[i].p_tat = process[i].p_ct - process[i].p_at;
+            process[i].p_wt = process[i].p_tat - process[i].p_bt;
+        } 
+        else
+        {
+            current_time = process[i].p_at;
+            // no cal again how many process are there at current time
+            arrived_process = getArivedProcess(process,i,current_time);
 
-        // sort data acc to burst time till 
-        printf("\n-----i = %d\n",i);
-        sortAccBt(process,i,arrived_process);
-        printf("\n");
-        display(process,no_of_process);
+            // now cal. all data
+            // sort data acc to burst time till 
+            ////printf("\n-----i = %d\n",i);
+            sortAccBt(process,i,arrived_process);
+            ////printf("\n");
+            ////display(process,no_of_process);
 
-        // set new current time
-        current_time += process[i].p_bt;
+            // set new current time
+            current_time += process[i].p_bt;
 
-        // data for current process
-        process[i].p_ct = current_time /*+ process[i].p_bt;*/;
-        process[i].p_tat = process[i].p_ct - process[i].p_at;
-        process[i].p_wt = process[i].p_tat - process[i].p_bt;
+            // data for current process
+            process[i].p_ct = current_time /*+ process[i].p_bt;*/;
+            process[i].p_tat = process[i].p_ct - process[i].p_at;
+            process[i].p_wt = process[i].p_tat - process[i].p_bt;
+
+        }
 
     }
 
-    // 
+    // Now display final order of execution and complete data.
     display(process,no_of_process);
 
     return 0;
